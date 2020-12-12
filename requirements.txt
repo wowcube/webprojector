@@ -1,0 +1,11 @@
+numpy
+opencv-python
+Flask
+watchdog
+
+Flask
+opencv-python
+Pillow
+pygame
+numpy
+PyTurboJpeg
