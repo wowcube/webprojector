@@ -9,7 +9,7 @@ Projector application examples
 - Flask (web server for Web Projector)
 - watchdog (file change notify for FS Projector)
 
-Use [requirements.txt]() to install pip requirements 
+Use `requirements.txt` to install pip requirements 
 ```shell script
 pip install -r requirements.txt
 ```
@@ -19,7 +19,7 @@ Optional:
 - [flask-latency](https://github.com/philfreo/flask-latency)
 
 ## Libraries
-- [wowcube](wowcube) used to parse json from WOWCube
+- [wowcube](wowcube) used to parse json from WOWCube, simple image manipulation and more
 
 ## Examples
 See [web_projector_basics.py](examples/web_projector_basics.py) for Web Projector example

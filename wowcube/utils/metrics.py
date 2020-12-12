@@ -1,3 +1,6 @@
+"""
+Author: Ivan Stepanov <ivanstepanovftw@gmail.com>
+"""
 import time
 
 from wowcube.utils.decorators import fluent

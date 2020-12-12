@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Author: Ivan Stepanov <ivanstepanovftw@gmail.com>
+"""
 from typing import List, Tuple
 import json
 

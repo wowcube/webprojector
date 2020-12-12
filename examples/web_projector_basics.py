@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+Author: Ivan Stepanov <ivanstepanovftw@gmail.com>
+"""
 import http
 import io
 import logging

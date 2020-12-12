@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+Author: Ivan Stepanov <ivanstepanovftw@gmail.com>
+"""
 import os
 import platform
 from json import JSONDecodeError

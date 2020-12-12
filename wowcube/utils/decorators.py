@@ -1,3 +1,6 @@
+"""
+Author: Ivan Stepanov <ivanstepanovftw@gmail.com>
+"""
 import functools
 
 
