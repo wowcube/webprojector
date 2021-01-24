@@ -6,3 +6,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+debug.log
+*.pyc
+.DS_Store
+
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
