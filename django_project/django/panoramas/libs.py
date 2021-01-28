@@ -34,3 +34,14 @@ def get_panoram_by_location(location):
     img.save(img_io, format="BMP")
     img_io.seek(0)
     return img_io
+
+
+def save_panoram_to_file(location, file_path):
+    try:
+        img_io = get_panoram_by_location(location)
+        print("img_io")
+        with open(file_path, "wb") as f:
+            f.write(img_io.getbuffer())
+        return True
+    except BaseException:
+        return False

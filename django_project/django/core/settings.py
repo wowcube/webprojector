@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
+    'djoser',
     'panoramas'
 ]
 
@@ -80,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
-            'read_default_file': '../mysql.conf',
+            'read_default_file': '../../../mysql.conf',
         },
     }
 }
@@ -119,6 +123,18 @@ USE_L10N = True
 USE_TZ = True
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'AUTH_HEADER_TYPES': ('JWT', 'Bearer', 'Token'),
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -126,3 +142,8 @@ STATIC_URL = '/static/'
 
 
 GOOGLE_STREETVIEW_KEY = os.environ['GOOGLE_STREETVIEW_KEY']
+PANORAMAS_PATH = os.environ['PANORAMAS_PATH']
+if PANORAMAS_PATH[-1] != '/':
+    PANORAMAS_PATH = PANORAMAS_PATH + '/'
+    # PANORAMAS_PATH = PANORAMAS_PATH.replace("’", "")
+    # PANORAMAS_PATH = PANORAMAS_PATH.replace("‘", "")
