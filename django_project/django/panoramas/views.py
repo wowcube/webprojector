@@ -11,6 +11,7 @@ import json
 from .libs import *
 from .models import *
 from .serializers import *
+from .permissions import *
 
 
 def check_seria_owner(user, seria_id):
@@ -109,3 +110,15 @@ class GetPanoramaSeriasList(generics.ListAPIView):
     def get_queryset(self):
         print(self.request.user.id)
         return PanoramaSeria.objects.filter(user_id=self.request.user.id)
+
+class GetPanoramaContentsList(generics.ListAPIView):
+    queryset = PanoramaSeriaContent.objects.all()
+    serializer_class = PanoramaContentsListSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['id', 'panorama_seria_id']
+    ordering_fields = ['id', 'panorama_seria_id', 'counter_view', 'time_add']
+
+class PanoramaContentRUD(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PanoramaSeriaContent.objects.all()
+    serializer_class = PanoramaContentsSerializer
+    permission_classes = [IsOwnerOrReadOnly]
