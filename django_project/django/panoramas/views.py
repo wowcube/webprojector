@@ -4,6 +4,7 @@ from django.http.response import HttpResponse, JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 import random
 import os
@@ -14,9 +15,9 @@ from .serializers import *
 from .permissions import *
 
 
-def check_seria_owner(user, seria_id):
+def check_seria_owner(user_id, seria_id):
     try:
-        if len(PanoramaSeria.objects.filter(user=user, id=seria_id)) > 0:
+        if len(PanoramaSeria.objects.filter(user_id=user_id, id=seria_id)) > 0:
             return False
         else:
             return True
@@ -35,7 +36,7 @@ def serias_panoram_tmp(request):
 
 
 @api_view(['GET'])
-def serias_panoram(request, seria_id):
+def get_panorama(request, seria_id):
     res = {}
     res['status'] = False
     try:
@@ -65,7 +66,7 @@ def post_panorama_seria_content_by_location(request, seria_id):
         res['error'] = 'Unauthorized'
         return JsonResponse(res, status=401, safe=True)
 
-    # if check_seria_owner(request.user, seria_id) == False:
+    # if check_seria_owner(request.user.id, seria_id) == False:
     #     res['error'] = 'Unauthorized'
     #     return JsonResponse(res, status=401, safe=True)
 
@@ -98,9 +99,94 @@ def post_panorama_seria_content_by_location(request, seria_id):
         return JsonResponse(res, status=405, safe=True)
 
 
-class GetPanoramaSeriasList(generics.ListAPIView):
+
+@api_view(['POST'])
+def post_panorama_seria_content_by_files(request, seria_id):
+    res = {}
+    res['status'] = False
+    res['error'] = ''
+
+    if not request.user.is_authenticated:
+        res['error'] = 'Unauthorized'
+        return JsonResponse(res, status=401, safe=True)
+
+    # if check_seria_owner(request.user.id, seria_id) == False:
+    #     res['error'] = 'Unauthorized'
+    #     return JsonResponse(res, status=401, safe=True)
+
+    if request.method == 'POST':
+        try:
+            pano_seria_path = settings.PANORAMAS_PATH + str(seria_id) + '/'
+            try:
+                print(pano_seria_path)
+                if not os.path.exists(pano_seria_path):
+                    os.makedirs(pano_seria_path)
+                    print('create dir')
+                # images = dict((request.data).lists())['images']
+                images = request.FILES.getlist('images')
+                for file in images:
+                    new_pano = PanoramaSeriaContent.objects.create(
+                        panorama_seria_id=int(seria_id)
+                    )
+                    try:
+                        img_io = convert_to_panoram(file)
+                        file_path = pano_seria_path + str(new_pano.id) + ".bmp"
+                        with open(file_path, "wb") as f:
+                            f.write(img_io.getbuffer())
+                    except BaseException:
+                        new_pano.delete()
+
+                res['count'] = len(images)
+                res['status'] = True
+                return JsonResponse(res, status=201, safe=True)
+
+            except BaseException:
+                res['error'] = 'Bad Request'
+                return JsonResponse(res, status=400, safe=True)
+
+            # if len(req_json['location']) > 3:
+            #     print(pano_seria_path)
+            #     if not os.path.exists(pano_seria_path):
+            #         os.makedirs(pano_seria_path)
+            #         print('create dir')
+            #     new_pano = PanoramaSeriaContent.objects.create(
+            #         panorama_seria_id = int(seria_id)
+            #     )
+            #     if save_panoram_to_file(req_json['location'], pano_seria_path+str(new_pano.id)+".bmp"):
+            #         res['status'] = True
+            #         return JsonResponse(res, status=201, safe=True)
+            #     else:
+            #         new_pano.delete()
+
+            res['error'] = 'Bad Request'
+            return JsonResponse(res, status=400, safe=True)
+        except BaseException as e:
+            res['error'] = 'Bad Request'
+            res['message'] = str(e)
+            return JsonResponse(res, status=400, safe=True)
+    # if False:
+    #     pass
+    else:
+        res['error'] = 'Method Not Allowed'
+        return JsonResponse(res, status=405, safe=True)
+
+
+class PanoramaContentsList(generics.ListAPIView):
+    queryset = PanoramaSeriaContent.objects.all()
+    serializer_class = PanoramaContentListSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['id', 'panorama_seria_id']
+    ordering_fields = ['id', 'panorama_seria_id', 'counter_view', 'time_add']
+
+class PanoramaContentRUD(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PanoramaSeriaContent.objects.all()
+    serializer_class = PanoramaContentSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
+class SeriaList(generics.ListAPIView):
     queryset = PanoramaSeria.objects.all()
-    serializer_class = SeriasListSerializer
+    serializer_class = SeriaListSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_fields = ['id', 'title', 'counter_view', 'time_add', 'description']
     #filterset_fields = ['title']
@@ -111,14 +197,13 @@ class GetPanoramaSeriasList(generics.ListAPIView):
         print(self.request.user.id)
         return PanoramaSeria.objects.filter(user_id=self.request.user.id)
 
-class GetPanoramaContentsList(generics.ListAPIView):
-    queryset = PanoramaSeriaContent.objects.all()
-    serializer_class = PanoramaContentsListSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filter_fields = ['id', 'panorama_seria_id']
-    ordering_fields = ['id', 'panorama_seria_id', 'counter_view', 'time_add']
 
-class PanoramaContentRUD(generics.RetrieveUpdateDestroyAPIView):
-    queryset = PanoramaSeriaContent.objects.all()
-    serializer_class = PanoramaContentsSerializer
+class SeriaCreate(generics.CreateAPIView):
+    serializer_class = SeriaSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class SeriaRUD(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PanoramaSeria.objects.all()
+    serializer_class = SeriaSerializer
     permission_classes = [IsOwnerOrReadOnly]

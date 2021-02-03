@@ -2,20 +2,30 @@ from rest_framework import serializers
 from .models import *
 
 
-class PanoramaContentsListSerializer(serializers.ModelSerializer):
+class PanoramaContentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeriaContent
         fields = ['id', 'counter_view', 'time_add']
 
-class SeriasListSerializer(serializers.ModelSerializer):
-    panoramas = PanoramaContentsListSerializer(many=True)
+
+class PanoramaContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PanoramaSeriaContent
+        fields = '__all__'
+
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+
+class SeriaListSerializer(serializers.ModelSerializer):
+    panoramas = PanoramaContentListSerializer(many=True)
     class Meta:
         model = PanoramaSeria
         fields = ['id', 'title', 'counter_view', 'time_add', 'description', 'panoramas']
 
-class PanoramaContentsSerializer(serializers.ModelSerializer):
+
+class SeriaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PanoramaSeriaContent
+        model = PanoramaSeria
         fields = '__all__'
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

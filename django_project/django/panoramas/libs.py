@@ -4,6 +4,7 @@ import requests
 from PIL import Image
 from django.conf import settings
 
+
 def get_panoram_frame(location, heading, pitch):
     base_url = 'https://maps.googleapis.com/maps/api/streetview?size=480x480'
     key = settings.GOOGLE_STREETVIEW_KEY
@@ -45,3 +46,46 @@ def save_panoram_to_file(location, file_path):
         return True
     except BaseException:
         return False
+
+def crop_box_240(base_image, left, top):
+    return base_image.crop( (left, top, left+240, top+240) )
+
+
+def convert_to_panoram(img_io):
+    base_image = Image.open(img_io)
+    base_image = base_image.resize((2320, 1740))
+
+    width, height = base_image.size
+    w = 480 * 4
+    h = 480 * 3
+
+    rect_original = width/4
+    display_rect_original = rect_original/2
+    croppx = 25
+
+    img = Image.new('RGBA', (w, h), (0,0,0,0))
+    print(width, height)
+    j = 0
+    while j < 6:
+        top = display_rect_original * j
+        top_past = 240 * j
+        i = 0
+        while i < 8:
+            img.paste(crop_box_240(base_image, croppx+290*i, top+croppx), (240*i,top_past))
+            i += 1
+        j += 1
+
+    # left_side = 350
+    # watermark = Image.open('panorams/space/watermark.png')
+    # img.paste(watermark, (left_side,460+480), mask=watermark)
+    # img.paste(watermark, (left_side+480,460+480), mask=watermark)
+    # img.paste(watermark, (left_side+480*2,460+480), mask=watermark)
+    # img.paste(watermark, (left_side+480*3,460+480), mask=watermark)
+    # img.paste(watermark, (left_side+480,460), mask=watermark)
+    # img.paste(watermark, (left_side+480,460+480*2), mask=watermark)
+
+    # img.show()
+    img_io = BytesIO()
+    img.save(img_io, format="BMP")
+    img_io.seek(0)
+    return img_io
