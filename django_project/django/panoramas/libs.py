@@ -37,10 +37,14 @@ def get_panoram_by_location(location):
     return img_io
 
 
-def save_panoram_to_file(location, file_path):
+def save_panoram_to_file(location, file_path, thumb_file_path):
     try:
         img_io = get_panoram_by_location(location)
-        print("img_io")
+        thumb_io = thumb_generate(img_io)
+        with open(thumb_file_path, "wb") as f:
+            f.write(thumb_io.getbuffer())
+
+        # print("img_io")
         with open(file_path, "wb") as f:
             f.write(img_io.getbuffer())
         return True
@@ -87,5 +91,16 @@ def convert_to_panoram(img_io):
     # img.show()
     img_io = BytesIO()
     img.save(img_io, format="BMP")
+    img_io.seek(0)
+    return img_io
+
+
+def thumb_generate(img_io):
+    thumb_panorama = Image.open(img_io)
+    thumb_panorama = thumb_panorama.resize((640, 480))
+    thumb_panorama = thumb_panorama.crop((0, 160, 640, 320))
+    thumb_panorama = thumb_panorama.convert('RGB')
+    img_io = BytesIO()
+    thumb_panorama.save(img_io, format="JPEG")
     img_io.seek(0)
     return img_io

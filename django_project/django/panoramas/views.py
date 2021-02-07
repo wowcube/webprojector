@@ -82,7 +82,9 @@ def post_panorama_seria_content_by_location(request, seria_id):
                 new_pano = PanoramaSeriaContent.objects.create(
                     panorama_seria_id = int(seria_id)
                 )
-                if save_panoram_to_file(req_json['location'], pano_seria_path+str(new_pano.id)+".bmp"):
+                file_path = pano_seria_path+str(new_pano.id)+".bmp"
+                thumb_file_path = pano_seria_path+str(new_pano.id)+"_thumb.jpg"
+                if save_panoram_to_file(req_json['location'], file_path, thumb_file_path):
                     res['status'] = True
                     return JsonResponse(res, status=201, safe=True)
                 else:
@@ -133,7 +135,14 @@ def post_panorama_seria_content_by_files(request, seria_id):
                         file_path = pano_seria_path + str(new_pano.id) + ".bmp"
                         with open(file_path, "wb") as f:
                             f.write(img_io.getbuffer())
-                    except BaseException:
+
+                        thumb_file_path = pano_seria_path + str(new_pano.id) + "_thumb.jpg"
+                        thumb_io = thumb_generate(file)
+                        with open(thumb_file_path, "wb") as f:
+                            f.write(thumb_io.getbuffer())
+                        # return HttpResponse(thumb_io, content_type="image/jpeg")
+                    except BaseException as e:
+                        print(e)
                         new_pano.delete()
 
                 res['count'] = len(images)
