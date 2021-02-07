@@ -140,6 +140,7 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/wowcube/www/back/webprojector/django_project/django/static'
 
 
 GOOGLE_STREETVIEW_KEY = os.environ['GOOGLE_STREETVIEW_KEY']
