@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'djoser',
+    'corsheaders',
     'panoramas'
 ]
 
@@ -55,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -149,3 +152,6 @@ if PANORAMAS_PATH[-1] != '/':
     PANORAMAS_PATH = PANORAMAS_PATH + '/'
     # PANORAMAS_PATH = PANORAMAS_PATH.replace("’", "")
     # PANORAMAS_PATH = PANORAMAS_PATH.replace("‘", "")
+
+
+CORS_ORIGIN_ALLOW_ALL = True
