@@ -216,3 +216,17 @@ class SeriaRUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = PanoramaSeria.objects.all()
     serializer_class = SeriaSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+
+
+class PanoramaContentList(generics.ListAPIView):
+    queryset = PanoramaSeriaContent.objects.all()
+    serializer_class = PanoramaContentListSerializer
+    # filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    # filter_fields = ['id', 'title', 'counter_view', 'time_add', 'description']
+    # search_fields = ['title', 'description']
+    # ordering_fields = ['title', 'time_add', 'counter_view']
+
+    def get_queryset(self):
+        seria_id = self.kwargs['seria_id']
+        return PanoramaSeriaContent.objects.filter(user_id=self.request.user.id, seria_id=seria_id)

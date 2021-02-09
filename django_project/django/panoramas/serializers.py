@@ -6,12 +6,14 @@ class PanoramaContentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeriaContent
         fields = ['id', 'counter_view', 'time_add']
+        read_only_fields = ['counter_view']
 
 
 class PanoramaContentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeriaContent
-        fields = '__all__'
+        fields = ['id', 'counter_view', 'time_add']
+        read_only_fields = ['counter_view']
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -21,11 +23,13 @@ class SeriaListSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeria
         fields = ['id', 'title', 'counter_view', 'time_add', 'description', 'panoramas']
+        read_only_fields = ['counter_view']
 
 
 class SeriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeria
-        fields = '__all__'
+        fields = ['id', 'title', 'counter_view', 'time_add', 'description', 'panoramas']
+        read_only_fields = ['counter_view']
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
