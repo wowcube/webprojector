@@ -29,7 +29,7 @@ class SeriaListSerializer(serializers.ModelSerializer):
 class SeriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = PanoramaSeria
-        fields = ['id', 'title', 'counter_view', 'time_add', 'description', 'panoramas']
+        fields = ['id', 'title', 'counter_view', 'time_add', 'description', 'user']
         read_only_fields = ['counter_view']
 
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

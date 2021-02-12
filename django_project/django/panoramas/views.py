@@ -196,6 +196,7 @@ class PanoramaContentRUD(generics.RetrieveUpdateDestroyAPIView):
 class SeriaList(generics.ListAPIView):
     queryset = PanoramaSeria.objects.all()
     serializer_class = SeriaListSerializer
+    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_fields = ['id', 'title', 'counter_view', 'time_add', 'description']
     #filterset_fields = ['title']
