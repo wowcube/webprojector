@@ -230,4 +230,4 @@ class PanoramaContentList(generics.ListAPIView):
 
     def get_queryset(self):
         seria_id = self.kwargs['seria_id']
-        return PanoramaSeriaContent.objects.filter(user_id=self.request.user.id, seria_id=seria_id)
+        return PanoramaSeriaContent.objects.filter(panorama_seria__user_id=self.request.user.id, panorama_seria_id=seria_id)

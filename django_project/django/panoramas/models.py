@@ -30,6 +30,6 @@ class PanoramaSeriaContent(models.Model):
         verbose_name = 'Seria content'
         verbose_name_plural = 'Seria contents'
 
-    panorama_seria = models.ForeignKey(PanoramaSeria, related_name='panoramas', blank=False, null=False, verbose_name='Owner', on_delete=models.CASCADE)
+    panorama_seria = models.ForeignKey(PanoramaSeria, related_name='panoramas', blank=False, null=False, verbose_name='Seria', on_delete=models.CASCADE)
     time_add = models.DateTimeField(auto_now_add=True, blank=False, null=False, verbose_name='Add time')
     counter_view = models.IntegerField(default=0, verbose_name='Views')
