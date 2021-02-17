@@ -56,6 +56,33 @@ def get_panorama(request, seria_id):
         res['message'] = str(e)
         return JsonResponse(res, status=400, safe=True)
 
+def get_panorama_thumb(request, panorama_id):
+    res = {}
+    res['status'] = False
+    try:
+        pano = PanoramaSeriaContent.objects.get(id=panorama_id)
+        img_io = get_thumb(pano.id, pano.panorama_seria.id)
+        return HttpResponse(img_io, content_type="image/jpeg")
+    except BaseException as e:
+        res['error'] = 'Bad Request'
+        res['message'] = str(e)
+        return JsonResponse(res, status=400, safe=True)
+
+def get_seria_thumb(request, seria_id):
+    res = {}
+    res['status'] = False
+    try:
+        seria = PanoramaSeria.objects.get(id=seria_id)
+        pano = PanoramaSeriaContent.objects.filter(panorama_seria=seria).order_by('id').first()
+        # print(str(len(pano)))
+        img_io = get_thumb(pano.id, seria_id)
+        return HttpResponse(img_io, content_type="image/jpeg")
+    except BaseException as e:
+        res['error'] = 'Bad Request'
+        res['message'] = str(e)
+        return JsonResponse(res, status=400, safe=True)
+
+
 @api_view(['POST'])
 def post_panorama_seria_content_by_location(request, seria_id):
     res = {}

@@ -104,3 +104,11 @@ def thumb_generate(img_io):
     thumb_panorama.save(img_io, format="JPEG")
     img_io.seek(0)
     return img_io
+
+
+def get_thumb(panorama_id=0, seria_id=0):
+    pano_path = settings.PANORAMAS_PATH + str(seria_id) + '/' + str(panorama_id) + "_thumb.jpg"
+    print(pano_path)
+    with open(pano_path, 'rb') as f:
+        img_io = f.read()
+    return img_io

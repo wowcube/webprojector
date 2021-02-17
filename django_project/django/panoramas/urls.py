@@ -2,8 +2,10 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('get/', serias_panoram_tmp),
-    path('panorama/get/<int:seria_id>/', get_panorama),
+    path('seria/image/thumb/<int:seria_id>/', get_seria_thumb),
+    path('panorama/image/<int:seria_id>/', get_panorama),
+    path('panorama/image/thumb/<int:panorama_id>/', get_panorama_thumb),
+
 
     path('panorama/list/<int:seria_id>/', PanoramaContentList.as_view()),
     path('panorama/location/add/<int:seria_id>/', post_panorama_seria_content_by_location),
