@@ -15,7 +15,7 @@ class PanoramaContentSerializer(serializers.ModelSerializer):
         fields = ['id', 'counter_view', 'time_add']
         read_only_fields = ['counter_view']
 
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    #user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
 
 class SeriaListSerializer(serializers.ModelSerializer):
