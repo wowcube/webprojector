@@ -1,0 +1,11 @@
+input.seria-input {
+  color: #fff;
+  border: initial;
+  outline: none;
+  border-radius: 10px;
+  width: 100%;
+}
+
+input.seria-input:focus {
+  outline: 1px solid rgba(255,255,255,0.2);
+}

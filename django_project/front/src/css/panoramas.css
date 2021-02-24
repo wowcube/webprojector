@@ -1,0 +1,20 @@
+.delete-button:hover {
+  cursor: pointer;
+  color: #fff;
+}
+.custom-file-upload {
+  width: 100%;
+  position: relative;
+}
+
+.custom-file-upload .hidden {
+  visibility: hidden;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+}
+
+.custom-modal-input {
+  width: 100%;
+  color: #fff;
+}
