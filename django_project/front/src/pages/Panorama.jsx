@@ -124,7 +124,7 @@ const Panorama = (props) => {
 								<h4 className="mb-0">{stateSeriaData.seriaData?.title}</h4>
 							</div>
 							<hr />
-							<div className="shadow-none p-3 mb-3 bg-light rounded">https://api.wowcube.xxiweb.ru/panoramas/panorama/get/{stateSeriaData.seriaData?.id}/</div>
+							<div className="shadow-none p-3 mb-3 bg-light rounded">https://api.wowcube.xxiweb.ru/api/panoramas/panorama/image/{stateSeriaData.seriaData?.id}/</div>
 							<div className="shadow-none p-3 mb-2 bg-light rounded">{stateSeriaData.seriaData?.description}</div>	
 						</div>
 					</div>
